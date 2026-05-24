@@ -2,9 +2,23 @@ const express = require("express")
 const cors = require("cors")
 const db = require("./db")
 const app = express()
+const multer = require("multer");
 
 app.use(cors())
 app.use(express.json())
+
+// archivo
+const storage = multer.diskStorage({
+    destination: (req, file, cb) =>{
+        cb(null, "Archivos/");
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + "-" + file.originalname);
+    }
+});
+
+const subir = multer ({ storage });
+
 
 // mostrar tareas
 app.get("/tareas",(req, res) => {
@@ -40,6 +54,14 @@ app.post("/tareas", (req, res) => {
         }
     })
 })
+
+//agregar archivo
+app.post("/archivos", subir.single("archivo"), (req,res)=>{
+    res.json({
+        mensaje: "Archivo Subido",
+        archivo: req.file
+    });
+});
 
 app.delete("/tareas/:id", (req, res) => {
     const { id } = req.params

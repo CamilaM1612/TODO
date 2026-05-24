@@ -36,6 +36,12 @@ const App = () => {
         });
     }
   };
+
+  const handleFile = async(e) => {
+    const formData = new FormData();
+    formData.append("archivo", e.target.files[0]);
+    await axios.post("http://localhost:3000/archivos", formData);
+  }
   const handleDelete = (id) => {
     axios
       .delete(`${Base_url}/${id}`)
@@ -77,10 +83,14 @@ const App = () => {
           onChange={(e) => setNewDescripcion(e.target.value)}
           placeholder="Descripcion"
         />
+        
+        <input type="file" onChange={handleFile} />
 
         <button onClick={handleCreate} className="btn-add">
           <i className="bi bi-plus-circle"></i>
         </button>
+
+        
       </div>
       <table>
         <tr>
