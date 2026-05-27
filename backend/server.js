@@ -8,10 +8,13 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const session = require("express-session");
 
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
 app.use(express.json());
 
-// oauth
+// iniciar sesion con google
 app.use(session({
   secret: "secreto",
   resave: false,
@@ -53,8 +56,26 @@ app.get("/auth/google/callback",
     res.redirect("http://localhost:5173/todo");
   }
 );
+// logout
+app.get("/logout", (req,res) =>{
+  req.logout ((err) =>{
+    if(err){
+      return res.status(500).json({
+        success: false,
+        mensaje: "Error al cerrar sesion"
+      });
+    }
+    req.session.destroy(() => {
+      res.clearCookie("connect.sid");
+      res.json ({
+        success: true,
+        mensaje: "Sesion cerrada"
+      });
+    });
+  });
+});
 
-// archivo
+// subir un archivo
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "Archivos/");

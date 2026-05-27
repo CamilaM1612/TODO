@@ -89,13 +89,26 @@ const App = () => {
       });
   };
 
+  const handleLogout = async () => {
+    try {
+      await axios.get("http://localhost:3000/logout", {
+        withCredentials:true
+      });
+      window.location.href = "/";
+    } catch (error){
+      console.error("Error al cerrar sesion", error);
+    }
+  };
+
   return (
     <div className="contenedor">
       <div className="card">
-        {/* <a href="http://localhost:3000/auth/google">
-         <i className="bi bi-google"></i>
-    Iniciar sesión con Google
-        </a> */}
+
+        <button onClick={handleLogout} className="btn-logout">
+          <i className="bi bi-box-arrow-right"></i>
+          cerrar sesion
+        </button>
+
         <h1>To Do List</h1>
 
         <div className="formulario">
