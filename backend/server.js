@@ -99,6 +99,26 @@ app.put("/tareas/:id", (req, res) => {
     })
 })
 
+
+app.put("/tareas/estado/:id", (req, res) => {
+    const {id} = req.params
+    const {estado} = req.body
+
+    const query = 'UPDATE tareas SET estado = ? WHERE id = ?'
+    db.query(query, [estado,id], (err, results) => {
+        if (err){
+            res.status(500).send({
+                error: 'Error al actualizar estado'
+            })
+        }else{
+            res.json({
+                id,
+                estado
+            })
+        }
+    })
+})
+
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
     console.log("servidor funcionando")

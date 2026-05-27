@@ -37,11 +37,11 @@ const App = () => {
     }
   };
 
-  const handleFile = async(e) => {
+  const handleFile = async (e) => {
     const formData = new FormData();
     formData.append("archivo", e.target.files[0]);
     await axios.post("http://localhost:3000/archivos", formData);
-  }
+  };
   const handleDelete = (id) => {
     axios
       .delete(`${Base_url}/${id}`)
@@ -67,65 +67,89 @@ const App = () => {
           );
         })
         .catch((error) => {
-          console.error("Error al actualizar el item", error);
+          console.error("Error al actualizar la tarea", error);
         });
     }
   };
 
+  const handleEstado = (id, estado) => {
+    axios
+      .put(`${Base_url}/estado/${id}`, {
+        estado: !estado,
+      })
+      .then(() => {
+        setItems((prevItems) =>
+          prevItems.map((item) =>
+            item.id === id ? { ...item, estado: !estado } : item,
+          ),
+        );
+      })
+      .catch((error) => {
+        console.error("Error al actualizar el estado", error);
+      });
+  };
+
   return (
     <div className="contenedor">
-      <h1>To Do List</h1>
+      <div className="card">
+        <h1>To Do List</h1>
 
-      <div>
-        <input
-          type="text"
-          value={newDescripcion}
-          onChange={(e) => setNewDescripcion(e.target.value)}
-          placeholder="Descripcion"
-        />
-        
-        <input type="file" onChange={handleFile} />
+        <div className="formulario">
+          <input
+            type="text"
+            className="descripcion"
+            value={newDescripcion}
+            onChange={(e) => setNewDescripcion(e.target.value)}
+            placeholder="Descripcion"
+          />
 
-        <button onClick={handleCreate} className="btn-add">
-          <i className="bi bi-plus-circle"></i>
-        </button>
+          <input className="archivo" type="file" onChange={handleFile} />
 
-        
+          <button onClick={handleCreate} className="btn-add">
+            <i className="bi bi-plus-circle"></i>
+          </button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Descripcion</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {items.map((item) => (
+              <tr key={item.id}>
+                <td className={item.estado ? "completada" : "descrip"}>{item.descripcion}</td>
+                <td>
+                <input
+                    type="checkbox"
+                    checked={item.estado}
+                    onChange={() => handleEstado(item.id, item.estado)}
+                  />
+                </td>
+                <td className="acciones">
+                  <button
+                    onClick={() => handleUpdate(item.id, item.descripcion)}
+                    className="btn-update"
+                  >
+                    <i className="bi bi-pencil-square"></i>
+                  </button>
+
+                  <button
+                    onClick={() => handleDelete(item.id)}
+                    className="btn-delete"
+                  >
+                    <i className="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-      <table>
-        <tr>
-          {/* <th>Fecha</th> */}
-          <th>Descripcion</th>
-          <th>Acciones</th>
-        </tr>
-        {items.map((item) => (
-          <tr key={item.id}>
-            {/* <td>{item.fecha}</td> */}
-            <td className="descrip">{item.descripcion}</td>
-            <td className="acciones">
-  
-              <button onClick={() => handleUpdate(item.id, item.descripcion)} className="btn-update">
-                <i className="bi bi-pencil-square"></i>
-              </button>
-              <button onClick={() => handleDelete(item.id)} className="btn-delete">
-           
-                <i className="bi bi-trash"></i>{" "}
-              </button>
-            </td>
-          </tr>
-        ))}
-      </table>
-      {/* <ul>
-        {items.map((item) => (
-          <li key={item.id}>
-            {item.descripcion}
-            <button onClick={() => handleUpdate(item.id, item.descripcion)}>
-              Actualizar
-            </button>
-            <button onClick={() => handleDelete(item.id)}>Eliminar</button>
-          </li>
-        ))}
-      </ul> */}
     </div>
   );
 };
