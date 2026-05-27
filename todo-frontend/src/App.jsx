@@ -13,7 +13,7 @@ const App = () => {
     axios
       .get(`${Base_url}`)
       .then((response) => {
-        setItems(response.data);
+        setItems(response.data.data);
         console.log(response.data);
       })
       .catch((error) => {
@@ -28,7 +28,7 @@ const App = () => {
           descripcion: newDescripcion,
         })
         .then((response) => {
-          setItems((prevItems) => [...prevItems, response.data]);
+          setItems((prevItems) => [...prevItems, response.data.data]);
           setNewDescripcion("");
         })
         .catch((error) => {
@@ -92,6 +92,10 @@ const App = () => {
   return (
     <div className="contenedor">
       <div className="card">
+        <a href="http://localhost:3000/auth/google">
+         <i className="bi bi-google"></i>
+    Iniciar sesión con Google
+        </a>
         <h1>To Do List</h1>
 
         <div className="formulario">
@@ -120,7 +124,7 @@ const App = () => {
           </thead>
 
           <tbody>
-            {items.map((item) => (
+            {Array.isArray(items) && items.map((item) => (
               <tr key={item.id}>
                 <td className={item.estado ? "completada" : "descrip"}>{item.descripcion}</td>
                 <td>
