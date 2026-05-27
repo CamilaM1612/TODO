@@ -50,7 +50,7 @@ app.get("/auth/google/callback",
     failureRedirect: "/login"
   }),
   (req,res) => {
-    res.send("login exitoso con google");
+    res.redirect("http://localhost:5173/todo");
   }
 );
 
@@ -67,7 +67,7 @@ const storage = multer.diskStorage({
 const subir = multer({ storage });
 
 app.use((req, res, next) => {
-    res.setHeader("Content-Type", "application/json");
+    // res.setHeader("Content-Type", "application/json");
     res.setHeader("Autor","Camila");
     res.setHeader("Version", "1.0");
 
