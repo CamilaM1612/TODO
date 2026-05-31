@@ -26,12 +26,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.use(new GoogleStrategy({
-  clientID: "913973714701-nq2objp61gcsfms5u75m03thn9mnfcj3.apps.googleusercontent.com",
   clientID: process.env.GOOGLE_CLIENT_ID,
-clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL:"http://localhost:3000/auth/google/callback"
 },
 (accessToken, refreshToken, profile, done) => {
-  return done (null, profile);
+  return done(null, profile);
 }
 ));
 
