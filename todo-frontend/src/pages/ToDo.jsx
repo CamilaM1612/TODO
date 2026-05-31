@@ -132,6 +132,7 @@ const App = () => {
             <tr>
               <th>Descripcion</th>
               <th>Estado</th>
+              <th>Documento</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -146,6 +147,9 @@ const App = () => {
                     checked={item.estado}
                     onChange={() => handleEstado(item.id, item.estado)}
                   />
+                </td>
+                <td>
+                  <button onClick={() => window.open (`http://localhost:3000/download/${item.archivo}`)}></button>
                 </td>
                 <td className="acciones">
                   <button

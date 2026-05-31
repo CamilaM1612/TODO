@@ -12,6 +12,7 @@ app.use(cors({
     origin: "http://localhost:5173",
     credentials: true
 }));
+app.use ("/Archivos", express.static("Archivos"))
 app.use(express.json());
 
 // iniciar sesion con google
@@ -44,7 +45,8 @@ passport.deserializeUser((user, done) => {
 
 app.get("/auth/google",
   passport.authenticate("google", {
-    scope: ["profile", "email"]
+    scope: ["profile", "email"],
+    prompt: "select_account" // obligar a elegir cunta
   })
 );
 
@@ -56,36 +58,6 @@ app.get("/auth/google/callback",
     res.redirect("http://localhost:5173/todo");
   }
 );
-// logout
-app.get("/logout", (req,res) =>{
-  req.logout ((err) =>{
-    if(err){
-      return res.status(500).json({
-        success: false,
-        mensaje: "Error al cerrar sesion"
-      });
-    }
-    req.session.destroy(() => {
-      res.clearCookie("connect.sid");
-      res.json ({
-        success: true,
-        mensaje: "Sesion cerrada"
-      });
-    });
-  });
-});
-
-// subir un archivo
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "Archivos/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
-
-const subir = multer({ storage });
 
 app.use((req, res, next) => {
     // res.setHeader("Content-Type", "application/json");
@@ -146,6 +118,23 @@ app.post("/tareas", (req, res) => {
   });
 });
 
+// subir un archivo
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "Archivos/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const subir = multer({ storage });
+
+app.get("download/:nombre", (req,res) => {
+  const nombreArchivo = req.params.nombre;
+  res.download(`Archivos/${nombreArchivo}`);
+})
+
 //agregar archivo
 app.post("/archivos", subir.single("archivo"), (req, res) => {
   res.json({
@@ -154,6 +143,7 @@ app.post("/archivos", subir.single("archivo"), (req, res) => {
   });
 });
 
+// borrar tarea
 app.delete("/tareas/:id", (req, res) => {
   const { id } = req.params;
 
@@ -174,6 +164,7 @@ app.delete("/tareas/:id", (req, res) => {
   });
 });
 
+//editar una tarea
 app.put("/tareas/:id", (req, res) => {
   const { id } = req.params;
   const { descripcion } = req.body;
@@ -199,6 +190,7 @@ app.put("/tareas/:id", (req, res) => {
   });
 });
 
+//editr el estaod
 app.put("/tareas/estado/:id", (req, res) => {
   const { id } = req.params;
   const { estado } = req.body;
@@ -219,6 +211,7 @@ app.put("/tareas/estado/:id", (req, res) => {
   });
 });
 
+//obtener info de una tarea
 app.get("/tareas/:id", (req, res) => {
     const {id} = req.params;
 
@@ -243,6 +236,25 @@ app.get("/tareas/:id", (req, res) => {
             data: results[0]
         });
     });
+});
+
+// logout
+app.get("/logout", (req, res) =>{
+  req.logout((err) =>{
+    if(err){
+      return res.status(500).json({
+        success: false,
+        mensaje: "Error al cerrar sesion"
+      });
+    }
+    req.session.destroy(() => {
+      res.clearCookie("connect.sid");
+      res.json ({
+        success: true,
+        mensaje: "Sesion cerrada"
+      });
+    });
+  });
 });
 
 const PORT = process.env.PORT || 3000;
