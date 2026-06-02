@@ -1,4 +1,5 @@
 const express = require("express");
+require("dotenv").config();
 const cors = require("cors");
 const db = require("./db");
 const app = express();
@@ -7,6 +8,7 @@ const multer = require("multer");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const session = require("express-session");
+
 
 app.use(cors({
     origin: "http://localhost:5173",
@@ -95,11 +97,11 @@ app.get("/tareas", (req, res) => {
 
 // agregar tarea
 app.post("/tareas", (req, res) => {
-  const { descripcion } = req.body;
+  const { descripcion, archivo } = req.body;
 
-  const query = "INSERT INTO tareas (descripcion) VALUES (?)";
+  const query = "INSERT INTO tareas (descripcion, archivo) VALUES (?,?)";
 
-  db.query(query, [descripcion], (err, results) => {
+  db.query(query, [descripcion, archivo], (err, results) => {
     if (err) {
       res.status(500).send({
         mensaje: "Error al crear tareas",
@@ -112,6 +114,7 @@ app.post("/tareas", (req, res) => {
         data: {
           id: results.insertId,
           descripcion,
+          archivo
         },
       });
     }
@@ -130,7 +133,7 @@ const storage = multer.diskStorage({
 
 const subir = multer({ storage });
 
-app.get("download/:nombre", (req,res) => {
+app.get("/download/:nombre", (req,res) => {
   const nombreArchivo = req.params.nombre;
   res.download(`Archivos/${nombreArchivo}`);
 })

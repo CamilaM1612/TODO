@@ -8,6 +8,7 @@ const Base_url = "http://localhost:3000/tareas";
 const App = () => {
   const [items, setItems] = useState([]);
   const [newDescripcion, setNewDescripcion] = useState("");
+  const [archivo, setArchivo] = useState("");
 
   useEffect(() => {
     axios
@@ -26,6 +27,7 @@ const App = () => {
       axios
         .post(`${Base_url}/`, {
           descripcion: newDescripcion,
+          archivo:archivo
         })
         .then((response) => {
           setItems((prevItems) => [...prevItems, response.data.data]);
@@ -40,8 +42,13 @@ const App = () => {
   const handleFile = async (e) => {
     const formData = new FormData();
     formData.append("archivo", e.target.files[0]);
-    await axios.post("http://localhost:3000/archivos", formData);
+
+    const response = await axios.post(
+      "http://localhost:3000/archivos", 
+      formData);
+      setArchivo(response.data.archivo.filename);
   };
+
   const handleDelete = (id) => {
     axios
       .delete(`${Base_url}/${id}`)
@@ -149,7 +156,12 @@ const App = () => {
                   />
                 </td>
                 <td>
-                  <button onClick={() => window.open (`http://localhost:3000/download/${item.archivo}`)}></button>
+                  {item.archivo && (
+                    <button onClick={() => window.open (`http://localhost:3000/download/${item.archivo}`)}>
+                      Descargar
+                    </button>
+                  )}
+                
                 </td>
                 <td className="acciones">
                   <button
