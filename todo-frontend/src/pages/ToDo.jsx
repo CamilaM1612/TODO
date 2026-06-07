@@ -109,13 +109,14 @@ const App = () => {
 
   return (
     <div className="contenedor">
-      <div className="card">
-
+      
+      <div className="boton">
         <button onClick={handleLogout} className="btn-logout">
           <i className="bi bi-box-arrow-right"></i>
-          cerrar sesion
+          Cerrar sesion
         </button>
-
+      </div>
+      <div className="card">
         <h1>To Do List</h1>
 
         <div className="formulario">

@@ -35,7 +35,23 @@ body{
   backdrop-filter: blur(5px);
   box-shadow: 0 10px 30px rgba(0,0,0,0.18);
 }
-
+.boton{
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+.btn-logout{
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: aliceblue;
+  color: #000000;
+  font-size: 2.5vh;
+}
+.btn-logout i {
+  margin-right: 4px;
+}
 h1{
   text-align: center;
   margin-bottom: 25px;

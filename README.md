@@ -5,6 +5,9 @@ Aplicaci0n web desarrollada con React, Node.js, Express y MySQL para la gestion 
 * MySQL
 * Git
 
+## HTTPS
+El backend utiliza HTTPS mediante los certificados locales `key.pem` y `cert.pem`.
+
 ## Clonar el proyecto
 git clone https://github.com/CamilaM1612/TODO.git
 cd TODO
