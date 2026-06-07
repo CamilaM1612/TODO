@@ -4,7 +4,7 @@ const Login = () => {
       <div className="login-card">
         <h1>To Do List</h1>
         <p>Inicia sesión con Google</p>
-        <a href="http://localhost:3000/auth/google">
+        <a href="https://localhost:3000/auth/google">
           <button className="btn-google">
             Iniciar sesión con Google
           </button>

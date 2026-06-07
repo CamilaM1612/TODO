@@ -1,3 +1,6 @@
+//https
+const https = require("https");
+const fs = require("fs");
 const express = require("express");
 require("dotenv").config();
 const cors = require("cors");
@@ -26,11 +29,11 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-
+//escalar http
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL:"http://localhost:3000/auth/google/callback"
+  callbackURL:"https://localhost:3000/auth/google/callback"
 },
 (accessToken, refreshToken, profile, done) => {
   return done(null, profile);
@@ -260,7 +263,13 @@ app.get("/logout", (req, res) =>{
   });
 });
 
+const opciones = {
+  key: fs.readFileSync('key.pem'),
+  cert: fs.readFileSync('cert.pem')
+};
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log("servidor funcionando");
+
+https.createServer(opciones, app).listen(PORT, () => {
+  console.log(`Servidor HTTPS funcionando en https://localhost:${PORT}`);
 });

@@ -3,7 +3,7 @@ import axios from "axios";
 import "../style/ToDo.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-const Base_url = "http://localhost:3000/tareas";
+const Base_url = "https://localhost:3000/tareas";
 
 const App = () => {
   const [items, setItems] = useState([]);
@@ -44,7 +44,7 @@ const App = () => {
     formData.append("archivo", e.target.files[0]);
 
     const response = await axios.post(
-      "http://localhost:3000/archivos", 
+      "https://localhost:3000/archivos", 
       formData);
       setArchivo(response.data.archivo.filename);
   };
@@ -98,7 +98,7 @@ const App = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.get("http://localhost:3000/logout", {
+      await axios.get("https://localhost:3000/logout", {
         withCredentials:true
       });
       window.location.href = "/";
@@ -157,7 +157,7 @@ const App = () => {
                 </td>
                 <td>
                   {item.archivo && (
-                    <button onClick={() => window.open (`http://localhost:3000/download/${item.archivo}`)}>
+                    <button onClick={() => window.open (`https://localhost:3000/download/${item.archivo}`)}>
                       Descargar
                     </button>
                   )}
